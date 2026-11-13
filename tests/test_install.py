@@ -56,7 +56,7 @@ class TestInstall(unittest.TestCase):
         sources = sorted(
             path
             for path in (self.checkout / "instructions").rglob("*")
-            if path.is_file()
+            if path.is_file() and path.name.lower() != "readme.md"
         )
         expected = [
             f"Copied: {source} -> "
@@ -64,6 +64,7 @@ class TestInstall(unittest.TestCase):
             for source in sources
         ]
         first = self.run_install()
+        self.assertFalse((self.destination / "instructions/README.md").exists())
         self.assertEqual(first.stdout.splitlines()[:-1], expected)
         installed = sorted(self.destination.rglob("*"))
         self.assertEqual(
@@ -88,11 +89,13 @@ class TestInstall(unittest.TestCase):
         added = self.checkout / "instructions/future/deep/.payload.bin"
         added.parent.mkdir(parents=True)
         added.write_bytes(b"\x00verbatim\r\n\xff\n")
+        (added.parent / "ReadMe.MD").write_text("Documentation only")
         target = self.destination / added.relative_to(self.checkout)
         output = self.run_install().stdout
         self.assertIn(f"Copied: {added} -> {target}\n", output)
         self.assertIn(f"1 copied, {len(sources)} unchanged", output)
         self.assertEqual(target.read_bytes(), added.read_bytes())
+        self.assertFalse((target.parent / "ReadMe.MD").exists())
 
     def test_destination_overwrite_and_preflight_conflict(self) -> None:
         """Use a config root; preserve unrelated files and reject conflicts."""
@@ -101,9 +104,9 @@ class TestInstall(unittest.TestCase):
         target = self.destination / "instructions/testing.instructions.md"
         original = target.read_bytes()
         target.write_bytes(b"custom")
-        missing = self.destination / "instructions/README.md"
+        missing = self.destination / "instructions/coding.instructions.md"
         missing.unlink()
-        keep = self.destination / "instructions/keep.txt"
+        keep = self.destination / "instructions/README.md"
         keep.write_bytes(b"unrelated")
         protected = self.run_install(
             "--destination", str(self.destination), "--no-overwrite", code=1
@@ -118,7 +121,9 @@ class TestInstall(unittest.TestCase):
         self.assertEqual(target.read_bytes(), original)
         self.assertEqual(
             missing.read_bytes(),
-            (self.checkout / "instructions/README.md").read_bytes(),
+            (
+                self.checkout / "instructions/coding.instructions.md"
+            ).read_bytes(),
         )
         self.assertEqual(keep.read_bytes(), b"unrelated")
         self.assertFalse((self.home / ".copilot").exists())

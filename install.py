@@ -37,13 +37,13 @@ def check_path(path: Path, directory: bool = False) -> None:
 
 
 def instruction_files(directory: Path) -> Iterator[Path]:
-    """Yield every instruction support file in deterministic path order."""
+    """Yield instruction support files, excluding README.md documentation."""
     check_path(directory, directory=True)
     for path in sorted(directory.iterdir()):
         check_path(path, directory=path.is_dir())
         if path.is_dir():
             yield from instruction_files(path)
-        else:
+        elif path.name.lower() != "readme.md":
             yield path
 
 
@@ -100,7 +100,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
         epilog=(
-            "Installs every file under instructions/, preserving "
+            "Installs every file except README.md (case-insensitive) under "
+            "instructions/, preserving "
             "subdirectories. "
             "Differing files are replaced by default; identical files are left "
             "untouched. Never follows links. Use trusted local directories; "
