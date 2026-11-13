@@ -78,28 +78,7 @@ Finalized code should build without a *single* compiler warning or error.
 
 ## Comments and In-Code Documentation
 
-Please comment the code following these guidelines:
-
-* The following should have comments attached to them such that an onlooker completely unfamiliar with the code can understand their purpose:
-    * All functions
-    * All data structures, enums, and other objects
-    * All source code files (each file should have a brief header describing the code it contains)
-    * All global-scope, file-scope, etc., definitions of consts and other values
-    * All code blocks within a function (a brief, 1-2 sentence comment should describe what each code block is doing).
-* When necessary, reference other functions or files in your comments by specifying their exact names within backticks (ex: `function_name`).
-* Future areas of improvement should be documented.
-
-Things you must avoid while writing comments:
-
-* You must have absolutely *zero* mentions of people, other agents, agent-related information that is not relevant to the code , references to code review feedback points, or *any* other metadata that is in your context during the development process (unless explicitly asked to).
-    * **Examples of what to avoid:**
-        * `// This function now accepts an additional parameter (Code Review - 1.3a)`
-        * `// This constant is used below and replaces a previously hard-coded value (P6)`
-        * `// - Written by Byteboy`
-        * `// This function was changed to do ... as requested by Connor`
-* You must have absolutely *zero* references the previous state of the code.
-    * You do not need to explain the reasoning or the differences between the current state versus the old state.
-    * Code comments must always describe the *exact*, *current* state of the of the code, and *nothing else*.
+Please read the [code commenting instructions](./code_commenting.instructions.md) and follow them to produce high-quality comments for your code.
 
 ## Code Style
 

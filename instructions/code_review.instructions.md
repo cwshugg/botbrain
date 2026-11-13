@@ -35,15 +35,8 @@ The goal of a code review is to maximize quality and clarity of the changes made
 
 ### Commenting
 
-* Do code comments describe the code, *only* the code, and *only* the *current state* of the code?
-    * Unless for a special reason, comments should not be describing a "previous implementation" or "a recent change".
-    * Comments should be timeless and apply to exactly the code in its current state.
-* Are there comments that contain references to any metadata that does not belong in the code?
-  These should be removed.
-    * Examples:
-        * The names of humans or other agents
-        * Agent metadata such as local working files, tasks, etc.
-        * Code review feedback points
+Please read the [code commenting instructions](./code_commenting.instructions.md) and ensure that all instructions within are followed.
+If they are not, include feedback in your code review that suggests how commenting can be improved.
 
 ### Documentation and Style
 
